@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Center, Box, Heading, VStack, FormControl, Input, Button } from "native-base";
+import { Center, Box, Heading, VStack, FormControl, Input, Button, Link } from "native-base";
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './fbConfig'
 
@@ -34,6 +34,13 @@ export default function Login({setUser}) {
             <FormControl isRequired>
                 <FormControl.Label color="coolGray.300">Password</FormControl.Label>
                 <Input onChangeText={setPassword} size="lg" color="coolGray.200" type="password"/>
+                <Link _text={{
+            fontSize: "xs",
+            fontWeight: "500",
+            color: "indigo.500"
+          }} alignSelf="flex-end" mt="1">
+              Forget Password?
+            </Link>
             </FormControl>
             <Button onPress={handleLogin} mt={3} colorScheme="primary">
                 Sign In

@@ -13,7 +13,25 @@ export default function ToDoList({ user }) {
             .then(setToDoItems)
             .catch(alert)
         }
-    }, [user])
+    }, [user]);
+
+    const handleItemUpdate = (id, done) => {
+        const itemUpdate = { id, done: !done }
+
+        fetch(`https://chekov-api-dl.web.app/tasks/${user.uid}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(itemUpdate),
+        })
+        .then( res => res.json() )
+        .then( data => {
+            console.log(data)
+            setToDoItems(data)
+        })
+        .catch(alert)
+    }
 
   return (
     <Center w="100%">
@@ -21,23 +39,29 @@ export default function ToDoList({ user }) {
             <VStack space={4} mt={4}>
                 <ToDoHeader user={ user } setToDoItems={ setToDoItems } />
                 {!toDoItems
-                ? <Text fontSize="xl" w="100%" color="coolGrey.300" textAlign="center">Loading...</Text>
-                : toDoItems.map(item => (
+                ? <Text fontSize="xl" w="100%" color="coolGray.300" textAlign="center">Loading...</Text>
+                : toDoItems.map(item => {
+                    const thisItemId = item.id
+                    const thisItemDone= item.done
+                    return (
                     <HStack key={item.id} w="100%" justifyContent="space-between" alignItems="center">
                         <Checkbox 
                         aria-label={item.title}
-                        isChecked={item.done} />
+                        isChecked={item.done} 
+                        onChange={ () => handleItemUpdate (thisItemId, thisItemDone) } />
                         <Text 
                             fontSize={18} 
+                            onPress={ () => handleItemUpdate (thisItemId, thisItemDone) }
                             mx={2}
                             strikeThrough={item.done}
                             color={item.done ? 'coolGray.500' : "coolGray.100"}
                             textAlign="left"
                             width="100%"
                         
-                        >{item.title}</Text>
+                        >{item.title}
+                        </Text>
                     </HStack>
-                ))
+                )})
                 }
             </VStack>
         </Box>
